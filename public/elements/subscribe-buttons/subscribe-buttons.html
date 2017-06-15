@@ -58,8 +58,14 @@
   Polymer({
     is: 'subscribe-buttons',
 
-    handleMessage: function() {
-      console.log('should handle message')
+    handleMessage: function(e) {
+      var message = event.detail.message;
+      if (message.hasOwnProperty('notification')) {
+        new Notification(message.notification.title, {
+          body: message.notification.body,
+          icon: message.notification.icon
+        })
+      }
     },
 
     toggleSubscription: function() {
