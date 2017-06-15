@@ -14,15 +14,19 @@
         display: block;
       }
 
+      a[href] {
+        color: #3f51b5;
+      }
+
+      a[href]:hover {
+        color: #070748;
+      }
+
       .wrapper {
         width: calc(100% - 20px);
         max-width: 600px;
         display: block;
         margin: 0 auto 30px;
-      }
-
-      .wrapper:last-child {
-        margin-bottom: 0;
       }
 
       paper-button {
@@ -72,6 +76,13 @@
         </div>
       </paper-card>
     </template>
+
+    <paper-card class="wrapper">
+      <div class="card-content">
+        Ideen / Vorschläge / Bugs: <a href="mailto:max.bachhuber@bahuma.io">max.bachhuber@bahuma.io</a> | <a href="https://bahuma.io/#impressum" target="_blank">Impressum</a><br>
+        <a href="https://github.com/bahuma/rocketpush-frontend" target="_blank">Fork me on Github</a>
+      </div>
+    </paper-card>
 
   </template>
 
