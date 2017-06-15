@@ -1,0 +1,14 @@
+{
+  "name": "rocketpush",
+  "main": "index.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.9.0",
+    "polymerfire": "firebase/polymerfire#^2.1.0",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
+    "paper-button": "PolymerElements/paper-button#^2.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.0",
+    "paper-card": "PolymerElements/paper-card#^2.0.0",
+    "app-layout": "PolymerElements/app-layout#^2.0.0"
+  }
+}

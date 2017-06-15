@@ -1,0 +1,98 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="../show-list/show-list.html">
+<link rel="import" href="../subscribe-buttons/subscribe-buttons.html">
+
+<dom-module id="rbnotify-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .wrapper {
+        width: calc(100% - 20px);
+        max-width: 600px;
+        display: block;
+        margin: 0 auto 30px;
+      }
+
+      .wrapper:last-child {
+        margin-bottom: 0;
+      }
+
+      paper-button {
+        margin: 0 .5em .5em 0;
+      }
+    </style>
+
+    <firebase-app
+      auth-domain="rbnotify-309b6.firebaseapp.com"
+      database-url="https://rbnotify-309b6.firebaseio.com"
+      api-key="AIzaSyAwN0lys6iJ-tcErA5s3Ht3ER5tbSrdlDA"
+      storage-bucket="rbnotify-309b6.appspot.com"
+      messaging-sender-id="791329292196">
+    </firebase-app>
+
+    <firebase-auth
+      id="auth"
+      user="{{user}}"
+      status-known="{{statusKnown}}">
+    </firebase-auth>
+
+
+    <template is="dom-if" if="[[!user]]">
+      <paper-card class="wrapper login-card">
+        <div class="card-content">
+          <p>Über diese Website kannst du dir <strong>Push-Benachrichtigungen</strong> schicken lassen wenn im Live-Programm von <a href="http://rocketbeans.tv" target="_blank">Rocketbeans</a> eine bestimmte Show beginnt.</p>
+          <p>Du kannst auswählen über welche Shows du benachrichtigt werden möchtest.</p>
+          <p>Außerdem kannst du auswählen dass du nur über Live-Streams oder Premieren oder über alles benachrichtigt wirst.</p>
+          <p>Um diese Einstellungen speichern zu können musst du dich einloggen:</p>
+          <paper-button raised on-tap="login" data-provider="google" style="background: #dd4b39; color: #FFF">Login mit Google</paper-button>
+          <paper-button raised on-tap="login" data-provider="twitter" style="background: #1da1f2; color: #FFF">Login mit Twitter</paper-button>
+          <paper-button raised on-tap="login" data-provider="facebook" style="background: #3b5998; color: #FFF">Login mit Facebook</paper-button>
+        </div>
+      </paper-card>
+    </template>
+
+    <template is="dom-if" if="[[user]]">
+      <paper-card class="wrapper">
+        <div class="card-content">
+          <subscribe-buttons></subscribe-buttons>
+        </div>
+      </paper-card>
+
+      <paper-card class="wrapper">
+        <div class="card-content">
+          <show-list></show-list>
+        </div>
+      </paper-card>
+    </template>
+
+  </template>
+
+
+  <script>
+    Polymer({
+
+      is: 'rbnotify-app',
+
+      properties: {
+      },
+
+      login: function(e) {
+        var provider = e.target.dataset.provider;
+        console.log(provider);
+        this.$.auth.signInWithPopup(provider);
+      },
+
+      logout: function() {
+        this.$.auth.signOut();
+      }
+    });
+  </script>
+</dom-module>

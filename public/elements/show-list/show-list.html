@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../show-abo/show-abo.html">
+
+<dom-module id="show-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      show-abo {
+        margin-bottom: .5em;
+      }
+
+      h2 {
+        font-weight: lighter;
+      }
+
+      @media (max-width: 639px) {
+        show-abo {
+          margin-bottom: 1.5em;
+        }
+      }
+
+      @media (max-width: 399px) {
+        h2 {
+          font-size: 18px;
+        }
+      }
+    </style>
+
+    <firebase-auth user="{{user}}"></firebase-auth>
+
+    <firebase-query
+      id="query"
+      path="/users/[[user.uid]]/shows"
+      data="{{shows}}">
+    </firebase-query>
+
+    <firebase-query
+      id="allShowsQuery"
+      path="/shows"
+      data="{{allShows}}"
+      order-by-child="label">
+    </firebase-query>
+
+    <h2>Zu welchen Shows möchtest du Benachrichtigungen erhalten?</h2>
+
+    <template is="dom-repeat" items="[[allShows]]" as="show">
+      <show-abo
+        show-id="[[show.$key]]"
+        user-id="[[user.uid]]"
+        label="[[show.label]]"></show-abo>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'show-list',
+
+      properties: {
+        shows: {
+          type: Object
+        }
+      },
+    });
+  </script>
+</dom-module>

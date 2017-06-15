@@ -1,0 +1,99 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-messaging.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+
+<dom-module id="subscribe-buttons">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      paper-toggle-button {
+        margin-bottom: .5em;
+      }
+    </style>
+
+    <firebase-auth user="{{user}}"></firebase-auth>
+
+    <firebase-document
+      id="userdata"
+      path="/users/{{user.uid}}"
+      data="{{userdata}}"></firebase-document>
+
+    <firebase-messaging
+      id="messaging"
+      token="{{token}}"
+      push-supported="{{pushSupported}}"
+      on-message="handleMessage">
+    </firebase-messaging>
+
+
+    <template is="dom-if" if="[[pushSupported]]">
+      <paper-toggle-button
+        id="subscribe"
+        checked="[[token]]"
+        on-tap="toggleSubscription">
+        Benachrichtigungen einschalten
+      </paper-toggle-button>
+
+      <template is="dom-if" if="[[token]]">
+        <paper-toggle-button
+          checked="{{userdata.notifynewshows}}">
+          Benachrichtigung bei neuen Shows
+        </paper-toggle-button>
+      </template>
+    </template>
+
+    <template is="dom-if" if="[[!pushSupported]]">
+      Push Benachrichtigungen sind mit deinem Browser leider nicht möglich.<br>
+      Unterstützt ist bisher: Firefox, Chrome, Opera und Chrome für Android.
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'subscribe-buttons',
+
+    handleMessage: function() {
+      console.log('should handle message')
+    },
+
+    toggleSubscription: function() {
+      var self = this;
+      this.$.messaging.requestPermission().then(function(e) {
+        var interval = setInterval(function() {
+          var token = self.$.messaging.token;
+
+          if (token !== null) {
+            clearInterval(interval);
+            self.$.userdata.ref.child('notificationtokens').once('value',function(snapshot) {
+              var tokens = snapshot.val();
+              var tokensArr = [];
+
+              for(var key in tokens) {
+                  if (tokens.hasOwnProperty(key)) {
+                    tokensArr.push(tokens[key]);
+                  }
+              }
+
+              if (tokensArr.indexOf(token) === -1) {
+                self.$.userdata.ref.child('notificationtokens').push(token);
+                self.$.userdata.ref.child('notifynewshows').set(true);
+              }
+            });
+            console.log('token "'+ token +'" was saved to the database');
+          } else {
+            console.log('token is null');
+           }
+        }, 500);
+      }, function(err) {
+        // permission was denied
+      });
+    }
+  });
+</script>
+

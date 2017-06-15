@@ -1,0 +1,103 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="show-abo">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .show-name {
+        display: inline-block;
+        width: calc(100% - 320px);
+        font-weight: 500;
+      }
+
+      paper-checkbox {
+        margin-right: 1em;
+      }
+
+      paper-checkbox:last-child {
+        margin-right: 0;
+      }
+
+
+
+      @media (max-width: 639px) {
+        .show-name {
+          display: block;
+          width: 100%;
+          margin-bottom: .5em;
+        }
+      }
+
+      @media (max-width: 399px) {
+        paper-checkbox {
+          display: block;
+          margin-bottom: .5em;
+          margin-right: 0;
+        }
+
+        paper-checkbox:last-child {
+          margin-bottom: 0;
+        }
+      }
+    </style>
+
+    <firebase-document
+      id="doc"
+      path="/shows/[[showId]]/abos/[[userId]]"
+      data="{{state}}">
+    </firebase-document>
+
+    <span class="show-name">{{label}}</span>
+    <paper-checkbox checked="{{state.live}}">Live</paper-checkbox>
+    <paper-checkbox checked="{{state.premiere}}">Premiere</paper-checkbox>
+    <paper-checkbox checked="{{state.replay}}">Wiederholung</paper-checkbox>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'show-abo',
+
+      properties: {
+        showId: {
+          type: String
+        },
+        userId: {
+          type: String
+        },
+        label: {
+          type: String
+        },
+        aboState: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      blablub: function() {
+          console.log('yolo');
+      },
+
+      testfunction: function() {
+          console.log('test');
+      },
+
+      getChecked: function(aboState) {
+        if (typeof aboState === 'object') {
+          return false;
+        }
+
+        return aboState;
+      },
+
+      toggle: function(e) {
+//        var val = this.$.toggleButton.active;
+//        this.$.doc.ref.set(val);
+      }
+    })
+  </script>
+</dom-module>
